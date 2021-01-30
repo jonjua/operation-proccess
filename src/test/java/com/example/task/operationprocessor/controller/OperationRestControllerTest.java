@@ -3,6 +3,7 @@ package com.example.task.operationprocessor.controller;
 
 import com.example.task.operationprocessor.OperationProcessorApplication;
 import com.example.task.operationprocessor.dto.Operation;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,29 @@ public class OperationRestControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    public void addNewOperation_ReturnEmptyListWithHTTPStatusOk() throws Exception {
+
+
+
+        this.mockMvc.perform(
+                post("/api/operation/add")
+                        .param("accountNumber", "1")
+                        .param("recipientNumber", "3")
+                        .param("ip", "192.168.0.2")
+                        .param("amount", "10")
+
+                        .param("date", "2020-12-03 01:15:30")
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                // then
+                .andExpect(status().isOk())
+                .andExpect(content().string("[]"))
+                .andReturn();
+
+
+    }
+
+    @Test
     public void addTwoIdenticalOperation_ReturnListOfErrorStatus() throws Exception {
-
-
 
         this.mockMvc.perform(
                 post("/api/operation/add")
@@ -57,9 +78,11 @@ public class OperationRestControllerTest {
                         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 // then
                 .andExpect(status().isOk())
-                .andExpect(content().string("[]"))
+                .andExpect(content().string("[-1,-2]"))
                 .andReturn();
 
     }
+
+
 
 }
