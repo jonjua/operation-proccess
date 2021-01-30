@@ -6,6 +6,8 @@ import com.example.task.operationprocessor.rules.IRule;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +29,9 @@ public class OperationService {
         var accountNumber = operation.getAccountNumber();
         if (storage.containsKey(accountNumber)) {
             var operations = storage.get(accountNumber);
-            var collect = operations.stream().
+            operations.removeIf(t-> Duration.between(t.getDate(), LocalDateTime.now()).toMinutes()>600);
+            var collect = operations.
+                    stream().
                     flatMap(o -> rules.stream().map(r -> r.check(operation, o))).filter(Optional::isPresent).
                     map(Optional::get).
                     collect(Collectors.toList());
@@ -41,7 +45,6 @@ public class OperationService {
 
             return List.of();
         }
-
-
     }
+
 }
