@@ -17,8 +17,8 @@ import java.util.stream.Stream;
 @Service
 public class OperationService {
 
-    private Map<Integer, LinkedBlockingQueue<Operation>> storage = new ConcurrentHashMap<>();
-    private List<IRule> rules;
+    private final Map<Integer, LinkedBlockingQueue<Operation>> storage = new ConcurrentHashMap<>();
+    private final List<IRule> rules;
 
     public OperationService(List<IRule> rules) {
         this.rules = rules;
