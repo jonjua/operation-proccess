@@ -29,7 +29,7 @@ public class OperationService {
         var accountNumber = operation.getAccountNumber();
         if (storage.containsKey(accountNumber)) {
             var operations = storage.get(accountNumber);
-            operations.removeIf(t-> Duration.between(t.getDate(), LocalDateTime.now()).toMinutes()>600);
+            operations.removeIf(t-> Duration.between( LocalDateTime.now(),t.getDate()).toMinutes()>600);
             var collect = operations.
                     stream().
                     flatMap(o -> rules.stream().map(r -> r.check(operation, o))).filter(Optional::isPresent).
